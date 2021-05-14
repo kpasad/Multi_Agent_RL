@@ -21,8 +21,6 @@ In this environment, two agents (players) control rackets to bounce a ball over 
 
 They observation space comprises the image of the current state of the game. A possible solution could be to add the past image to the observation space. So this temporal correlation states the change in position and velocity of the ball and the rackets
 
-Remember the case of DQN for atari, in which you had to stack the last 4 frames of a history to produce the input to the Q-function and have a good state representation that could solve the problem.
-
 This strategy is useful in situations where there is important information about what has happened in the past, or happened over time which you want to keep track of, but don't necessarily have a good representation for. Like the position and velocity of the ball and the rackets.
 
 The "Number of stacked" parameter changes how many sets of observations into the past you'd like to stack. Increasing this allows the agent to "see" further into the past.
@@ -88,19 +86,20 @@ Key parameters are::
 |NOISE_mu	|0|
 |NOISE_theta	|0.15|
 |Gamma| 1|
-Not in particular, that Gamma is set to 1
+
+Note in particular, that Gamma is set to 1
 
 ## Running the simulation
 Run the file Tennis.py. The simulation will terminate when one of the two condition is met: The agent gets a score of 13 or the predetermined number of episodes elapse. At the end of simulation, a pickle file is generated. The file contains a dump of parameters as the raw scores. The scores can be analyzed to create the plot below using the utility script plotres.py. The network weights are checkpointed as well.
 
 ## Performance
-DDPG is notoriously difficult to train. The networks learn in successfully in a very narrow range of hyperparameter.
-1. Exploration model: The action determined by Action network is perturbed by the Ornstein–Uhlenbeck noise. Training the networks required change to the noise model, to change from uniform random to normal distribution
+The key parameter that was changed is the variance of the noise to control the tradefoff between exploration and explotation. The action determined by Action network is perturbed by the Ornstein–Uhlenbeck noise. Training the networks required change to the noise model, to change from uniform random to normal distribution
 
 #dx = self.theta * (self.mu - x) + self.sigma * np.array([random.random() for i in range(len(x))])  
 dx = self.theta * (self.mu - x) + self.sigma * np.array([np.random.standard_normal() for i in range(len(x))]) 
 With the parameters mentioned above, training progressed at a very slow rate for approximately initial 35% of the total time. In contrast to a steady accumulation of rewards, singular large reward events propelled the agents towards successfully meeting the rewards target.
 A snapshot of the numerical progress, culminating in a successful reward of 0.5 after 3155 episodes, is shown below. A complete history is [here](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/output_screenShot.txt)
+
 ![Multi-Agent DDPG Rewards progress](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/progress.JPG)
 ![Multi-Agent DDPG Rewards for Unity-ML Tennis](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/rewards.jpeg)
 
