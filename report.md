@@ -31,20 +31,14 @@ The "Number of stacked" parameter changes how many sets of observations into the
 Two continuous actions are available, corresponding to movement toward (or away from) the net, and jumping.
 
 
-## The Solution: Multiagent DDPG
+## The Solution: Multiagent RL (MARL)
 There are several multi-agent architectures possible. The architecture for this project contains:
 1. Actors that share weights
 2. Critic that concatenates the state and action space of both  the  agents.
 It might seem that the combination of 1 and 2 reduces the architecture to a single agent because both the actor and the critic operate on state and state+action space, respectively, of both players. However, there is a subtle diffrence. The actors share weight, but their inputs are state space of a single player. This is different from a single actor whose input is combined state of both the player.
 
-## DDPG algorithm
-DDPG algorithm was proposed in [this](https://arxiv.org/pdf/1509.02971.pdf) paper.
-Q-Learning cannot be applied to continuous action space as the optimization of the action (argmax) is inefficient if not immposible. DDPG solves this problem by directly mapping the state to the optimal action. The mapping is a non linear function, that is typically implemented as a neural network.  Exploration is invoked by dithering the action with Ornstein-Uhlenbeck noise.
-
-DDPG is often bucketed in family of actor-critic algorithm.The actor implements a current policy to map the state to optimal action. The critic implemets the Q function estimation, and estimates the Action value given a state and an action. The actor is trained by the maximising the gradient of action value. Critic is trained by minimizing the MSE between predicted Q-value and meausured Q value (as a surrogate for true long term).
-
-Experinces are stored in a replay buffer. 
-In order to encourage exploration during training, Ornstein-Uhlenbeck noise is added to the actors selected actions.
+## Multi-Agent DDPG algorithm (MADDPG)
+MADDPG algorithm was proposed in [this](https://papers.nips.cc/paper/2017/file/68a9750337a418a86fe06c1991a1d64c-Paper.pdf) paper. Why needed, vhnging rewards to make them ...how implemented in this project
 
 ### Network size 
 
@@ -80,6 +74,8 @@ Key parameters are::
 |EPSILON	|1.0|
 |EPSILON_DECAY|	1e-6|
 |NOISE_SIGMA	|0.1|
+|NOISE_mu	|0|
+|NOISE_theta	|0.15|
 |Gamma| 1|
 Not in particular, that Gamma is set to 1
 
@@ -93,7 +89,9 @@ DDPG is notoriously difficult to train. The networks learn in successfully in a 
 #dx = self.theta * (self.mu - x) + self.sigma * np.array([random.random() for i in range(len(x))])  
 dx = self.theta * (self.mu - x) + self.sigma * np.array([np.random.standard_normal() for i in range(len(x))]) 
 With the parameters mentioned above, training progressed at a very slow rate for approximately initial 35% of the total time. In contrast to a steady accumulation of rewards, singular large reward events propelled the agents towards successfully meeting the rewards target.
-![Scores for various learning rate](https://github.com/kpasad/Compettion_and_colaboration_MADDPG/blob/main/Results/final_scores.jpeg)
+A snapshot of the numerical progress, culminating in a successful reward of 0.5 is shown below. A complete history is [here](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/output_screenShot.txt))
+![Multi-Agent DDPG Rewards progress](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/progress.JPG)
+![Multi-Agent DDPG Rewards for Unity-ML Tennis](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/rewards.jpeg)
 
 ## Conclusion
 There are several minor and modification to try:
