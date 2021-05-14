@@ -31,14 +31,24 @@ The "Number of stacked" parameter changes how many sets of observations into the
 Two continuous actions are available, corresponding to movement toward (or away from) the net, and jumping.
 
 
-## The Solution: Multiagent RL (MARL)
-There are several multi-agent architectures possible. The architecture for this project contains:
-1. Actors that share weights
-2. Critic that concatenates the state and action space of both  the  agents.
-It might seem that the combination of 1 and 2 reduces the architecture to a single agent because both the actor and the critic operate on state and state+action space, respectively, of both players. However, there is a subtle diffrence. The actors share weight, but their inputs are state space of a single player. This is different from a single actor whose input is combined state of both the player.
-
-## Multi-Agent DDPG algorithm (MADDPG)
+## The Solution: Multi-Agent DDPG algorithm (MADDPG)
 MADDPG algorithm was proposed in [this](https://papers.nips.cc/paper/2017/file/68a9750337a418a86fe06c1991a1d64c-Paper.pdf) paper. Why needed, vhnging rewards to make them ...how implemented in this project
+When multiple single agents operate in an environment, the actions of the agents changes the environment. As the learning progresses, the distribution of the actions, conditioned on the environment state space also changes. 
+This  introduces non-stationarity in the environment. A single agent set up does not have this problem because the agents actions do not change the environment. 
+To make the envirnment staionary, the critic takes into account the actions of all the agents. There are sevral models possible:
+From the critic perspective:
+1. One critic per agent: In this model, the reward structur per critic can be designed to enable collaboration or competition.
+2. Common critic: This is equivalent to the case where each critic has the same reward structure, and all critics share the weigths
+
+From Actor perspective:
+1. Seperate actors: All agents have independent actors
+2. Actors share weights: In a homogeneous senvironment, where all agents are identical, they may share weigths. 
+
+In this project both agents are identical. So we chose a common critic and independent actors that share weights.
+The Critic concatenates the state and action space of both  the  agents.
+It might seem that the combination of actor and critic used in this fashion reduces the architecture to a single agent because both the actor and the critic operate on state and state+action space,
+respectively, of both players. However, there is a subtle diffrence. The actors share weight, but their inputs are state space of a single player. This is different from a single actor whose input 
+is combined state of both the player.
 
 ### Network size 
 
@@ -57,7 +67,8 @@ The critic network are:
 |3|64|1|Linear|
 
 The critic network concatenates the states from the two players. After the first layer
-the critic network concatenates the action estimated by the action network with a feature representation of the state instead of concatenating directly with the state. Critic learns faster on the feature representation instead of the raw state.
+the critic network concatenates the action estimated by the action network with a feature representation of the state instead of concatenating directly with the state. 
+Critic learns faster on the feature representation instead of the raw state.
 
 Key parameters are::
 |Parameter	|Value|
@@ -89,7 +100,7 @@ DDPG is notoriously difficult to train. The networks learn in successfully in a 
 #dx = self.theta * (self.mu - x) + self.sigma * np.array([random.random() for i in range(len(x))])  
 dx = self.theta * (self.mu - x) + self.sigma * np.array([np.random.standard_normal() for i in range(len(x))]) 
 With the parameters mentioned above, training progressed at a very slow rate for approximately initial 35% of the total time. In contrast to a steady accumulation of rewards, singular large reward events propelled the agents towards successfully meeting the rewards target.
-A snapshot of the numerical progress, culminating in a successful reward of 0.5 is shown below. A complete history is [here](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/output_screenShot.txt))
+A snapshot of the numerical progress, culminating in a successful reward of 0.5 after 3155 episodes, is shown below. A complete history is [here](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/output_screenShot.txt)
 ![Multi-Agent DDPG Rewards progress](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/progress.JPG)
 ![Multi-Agent DDPG Rewards for Unity-ML Tennis](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/rewards.jpeg)
 
