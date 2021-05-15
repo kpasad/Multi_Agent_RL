@@ -323,4 +323,4 @@ Episode 3220	Max Reward: 0.400	Average Reward: 0.331
 Episode 3230	Max Reward: 0.300	Average Reward: 0.326
 Episode 3240	Max Reward: 0.100	Average Reward: 0.341
 Episode 3250	Max Reward: 0.300	Average Reward: 0.430
-Environment solved in 3155 episodes!	Average Score: 0.500
+Environment solved in 3255 episodes!	Average Score: 0.500
