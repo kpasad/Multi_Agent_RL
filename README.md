@@ -49,6 +49,7 @@ Please see the instruction [here](https://github.com/udacity/deep-reinforcement-
 ## Baseline results
 The default parameter/results are located in the folder '/Results/Tennis.pk'. 
 Model chekpoints are located in the files '/Results/checkpoint_actor_0.pth' and '/Results/checkpoint_actor_1.pth'. 
+The progress of simulation is captured in '/Results/output_screenShot.txt'
 
 
 

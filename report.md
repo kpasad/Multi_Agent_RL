@@ -99,7 +99,7 @@ The key parameter that was changed is the variance of the noise to control the t
 dx = self.theta * (self.mu - x) + self.sigma * np.array([np.random.standard_normal() for i in range(len(x))]) 
 
 With the parameters mentioned above, training progressed at a very slow rate for approximately initial 35% of the total time. In contrast to a steady accumulation of rewards, singular large reward events propelled the agents towards successfully meeting the rewards target.
-A snapshot of the numerical progress, culminating in a successful reward of 0.5 after 3155 episodes, is shown below. A complete history is [here](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/output_screenShot.txt)
+A snapshot of the numerical progress, culminating in a successful reward of 0.5 after 3255 episodes, is shown below. A complete history is [here](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/output_screenShot.txt)
 
 ![Multi-Agent DDPG Rewards progress](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/progress.JPG)
 ![Multi-Agent DDPG Rewards for Unity-ML Tennis](https://github.com/kpasad/Multi_Agent_RL/blob/main/results/rewards.jpeg)
